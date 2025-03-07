@@ -1,0 +1,83 @@
+﻿@inject IPeopleData sql
+@rendermode InteractiveServer
+
+<h3 class="mb-3">Create Person</h3>
+
+<EditForm Model="person" method="post" FormName="createPersonForm" OnValidSubmit="CreatePerson">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>First Name:</label>
+        <InputText @bind-Value="person.FirstName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name:</label>
+        <InputText @bind-Value="person.LastName" class="form-control" />
+    </div>
+
+    <!-- Player Image Upload Section -->
+    <div class="mb-3">
+        <label for="playerimage" class="form-label">Player Image:</label>
+        <div class="custom-file-input">
+            <InputFile id="playerimage" OnChange="HandleImageFile" accept=".jpg,.jpeg,.png" />
+        </div>
+        @if (!string.IsNullOrEmpty(imagePreview))
+        {
+            <div style="margin: 1rem; border: solid black 2px; width: 254px; height: 254px;">
+                <img src="@imagePreview" alt="Image Preview" style="width: 250px; height: 250px;" />
+            </div>
+        }
+    </div>
+
+    <button class="btn btn-outline-primary" type="submit">Create Person</button>
+</EditForm>
+
+@code {
+    private PersonModel person = new();
+    private string imagePreview;
+
+    private async Task CreatePerson()
+    {
+        // Optional: Debugging – log the image byte length
+        Console.WriteLine("Image bytes length: " + (person.PlayerImage?.Length ?? 0));
+
+        // Save the person record including the uploaded image.
+        await sql.InsertPerson(person);
+
+        // Reset form state after saving (if desired)
+        person = new PersonModel();
+        imagePreview = null;
+    }
+
+    private async Task HandleImageFile(InputFileChangeEventArgs e)
+    {
+        if (e.File != null)
+        {
+            long maxFileSize = 150000; // bytes
+
+            if (e.File.Size < maxFileSize)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    // Optionally, you can pass maxFileSize into OpenReadStream, e.g.:
+                    // await e.File.OpenReadStream(maxFileSize).CopyToAsync(stream);
+                    await e.File.OpenReadStream().CopyToAsync(stream);
+                    byte[] imageBytes = stream.ToArray();
+
+                    // Create a Base64 string for the image preview.
+                    imagePreview = $"data:{e.File.ContentType};base64,{Convert.ToBase64String(imageBytes)}";
+
+                    person.PlayerImage = imageBytes;
+
+                    Console.WriteLine("Uploaded file size: " + imageBytes.Length);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Selected file is too large.");
+            }
+        }
+    }
+}

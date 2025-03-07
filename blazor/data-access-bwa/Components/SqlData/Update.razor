@@ -1,0 +1,155 @@
+﻿@rendermode InteractiveServer
+@inject IPeopleData sql
+
+<h3 class="mb-3">Update Person</h3>
+
+@if (people is null)
+{
+    <p>
+        Loading...
+    </p>
+}
+else
+{
+    <EditForm Model="selected" method="post" FormName="selectPersonForm" OnValidSubmit="LoadPersonToUpdate">
+        <InputSelect @bind-Value="selected.Id" class="form-control">
+            @foreach (var p in people)
+            {
+                <option value="@p.Id">@p.FirstName @p.LastName</option>
+            }
+        </InputSelect>
+        <button class="btn btn-outline-primary my-3" type="submit">Select Person</button>
+    </EditForm>
+
+    @if (personToUpdate is not null)
+    {
+        <EditForm Model="personToUpdate" method="post" FormName="updatePersonForm" OnValidSubmit="UpdatePerson">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label>Id: </label>
+                <span>@personToUpdate.Id</span>
+            </div>
+
+            <div class="mb-3">
+                <label>First Name:</label>
+                <InputText @bind-Value="personToUpdate.FirstName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>Last Name:</label>
+                <InputText @bind-Value="personToUpdate.LastName" class="form-control" />
+            </div>
+
+            <!-- Player Image Upload Section -->
+            <div class="mb-3">
+                <label for="playerimage" class="form-label">Player Image:</label>
+                <div class="custom-file-input">
+                    <InputFile id="playerimage" OnChange="HandleImageFile" accept=".jpg,.jpeg,.png" />
+                </div>
+                @if (!string.IsNullOrEmpty(imagePreview))
+                {
+                    <div style="margin: 1rem; border: solid black 2px; width: 254px; height: 254px;">
+                        <img src="@imagePreview" alt="Image Preview" style="width: 250px; height: 250px;" />
+                    </div>
+                }
+                else if (personToUpdate.PlayerImage != null && personToUpdate.PlayerImage.Length > 0)
+                {
+                    <div style="margin: 1rem; border: solid black 2px; width: 254px; height: 254px;">
+                        <img src="@GetImageSrc(personToUpdate.PlayerImage)" alt="Current Image" style="width: 250px; height: 250px;" />
+                    </div>
+                }
+            </div>
+
+            <button class="btn btn-outline-primary" type="submit">Update Person</button>
+        </EditForm>
+    }
+}
+
+@code {
+    private IEnumerable<PersonModel>? people;
+    private PersonModel? personToUpdate;
+    private SelectedPersonModel selected = new();
+    private string imagePreview;
+
+    private class SelectedPersonModel
+    {
+        public int Id { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private void LoadPersonToUpdate()
+    {
+        var foundPerson = people.Where(p => p.Id == selected.Id).FirstOrDefault();
+
+        if (foundPerson is not null)
+        {
+            personToUpdate = new();
+            personToUpdate.Id = foundPerson.Id;
+            personToUpdate.FirstName = foundPerson.FirstName;
+            personToUpdate.LastName = foundPerson.LastName;
+            personToUpdate.PlayerImage = foundPerson.PlayerImage;
+            imagePreview = null;
+        }
+        else
+        {
+            personToUpdate = null;
+        }
+    }
+
+    private async Task RefreshData()
+    {
+        people = null;
+        await Task.Delay(500);
+        people = await sql.GetAllPeople();
+    }
+
+    private async Task UpdatePerson()
+    {
+        await sql.UpdatePerson(personToUpdate);
+        personToUpdate = null;
+        selected.Id = 0;
+        imagePreview = null; // Reset image preview after updating
+        await RefreshData();
+    }
+
+    private async Task HandleImageFile(InputFileChangeEventArgs e)
+    {
+        if (e.File != null)
+        {
+            long maxFileSize = 150000; // bytes
+
+            if (e.File.Size < maxFileSize)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await e.File.OpenReadStream().CopyToAsync(stream);
+                    byte[] imageBytes = stream.ToArray();
+
+                    imagePreview = $"data:{e.File.ContentType};base64,{Convert.ToBase64String(imageBytes)}";
+                    personToUpdate.PlayerImage = imageBytes;
+
+                    Console.WriteLine("Uploaded file size: " + imageBytes.Length);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Selected file is too large.");
+            }
+        }
+    }
+
+    private string GetImageSrc(byte[] imageData)
+    {
+        if (imageData == null || imageData.Length == 0)
+        {
+            return string.Empty;
+        }
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(imageData)}";
+    }
+}

@@ -1,0 +1,51 @@
+﻿@rendermode InteractiveServer
+@inject IPeopleData sql
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<h3 class="mb-3">Read People</h3>
+
+@if (people is null)
+{
+    <p>
+        Refreshing...
+    </p>
+}
+else
+{
+    <QuickGrid TGridItem="DataAccessLibrary.Models.PersonModel"
+               Items="@(people?.AsQueryable() ?? Enumerable.Empty<DataAccessLibrary.Models.PersonModel>().AsQueryable())"
+               class="table table-bordered">
+        <PropertyColumn Property="@(p => p.FirstName)" Title="First Name" />
+        <PropertyColumn Property="@(p => p.LastName)" Title="Last Name" />
+        <TemplateColumn Title="Image">
+            <img src="@GetImageSrc(context.PlayerImage)" alt="No Image" style="max-width: 100px; max-height: 100px;" />
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+<button class="btn btn-outline-primary my-3" @onclick="RefreshData" type="button">Refresh Data</button>
+
+@code {
+    private IEnumerable<PersonModel>? people;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private async Task RefreshData()
+    {
+        people = null;
+        await Task.Delay(500);
+        people = await sql.GetAllPeople();
+    }
+
+    private string GetImageSrc(byte[] imageData)
+    {
+        if (imageData == null || imageData.Length == 0)
+        {
+            return string.Empty;
+        }
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(imageData)}";
+    }
+}

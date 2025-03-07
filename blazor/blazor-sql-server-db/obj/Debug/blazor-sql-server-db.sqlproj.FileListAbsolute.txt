@@ -1,0 +1,10 @@
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\bin\Debug\blazor-sql-server-db.dacpac
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\bin\Debug\blazor_sql_server_db.dll
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\bin\Debug\blazor_sql_server_db.pdb
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\blazor-sql-server-db.sqlproj.AssemblyReference.cache
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\blazor_sql_server_db.dll
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\blazor_sql_server_db.pdb
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\Model.xml
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\refactor.xml
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\postdeploy.sql
+C:\Users\mthil\local\blazor\DataAccess\blazor-sql-server-db\obj\Debug\predeploy.sql

@@ -1,0 +1,25 @@
+﻿** Highlights
+     Tables that will be recreated with data migrated
+       [dbo].[dim_chores]
+       [dbo].[dim_kids]
+       [dbo].[fact_chores]
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Recreate table
+       [dbo].[dim_chores] (Table)
+       [dbo].[dim_kids] (Table)
+       [dbo].[fact_chores] (Table)
+
+** Supporting actions
+     Drop
+       [dbo].[FK_fact_chores_dim_chores] (Foreign Key)
+       [dbo].[FK_fact_chores_dim_kids] (Foreign Key)
+     Create
+       [dbo].[FK_fact_chores_dim_chores] (Foreign Key)
+       [dbo].[FK_fact_chores_dim_kids] (Foreign Key)

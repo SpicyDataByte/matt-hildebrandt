@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[dim_kids]
+(
+	[Kid_ID] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [Kid_Name] NVARCHAR(50) NOT NULL
+)

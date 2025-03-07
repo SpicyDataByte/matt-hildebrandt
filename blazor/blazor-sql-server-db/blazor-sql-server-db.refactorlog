@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="089f991e-adbb-4220-8441-c2f189ad3c15" ChangeDateTime="02/07/2025 18:05:44">
+    <Property Name="ElementName" Value="[dbo].[dim_kids].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[dim_kids]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Kid_ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="12161c11-8626-4395-9303-ded71e506788" ChangeDateTime="02/07/2025 18:09:41">
+    <Property Name="ElementName" Value="[dbo].[dim_chores].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[dim_chores]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Chore_ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ec29265f-b523-4bc9-bc5c-85a7d6f1696e" ChangeDateTime="02/07/2025 18:09:57">
+    <Property Name="ElementName" Value="[dbo].[dim_chores].[Chore_N]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[dim_chores]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Chore_Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="39f06236-83f0-4e81-a45e-1f315f2540b3" ChangeDateTime="02/07/2025 18:10:45">
+    <Property Name="ElementName" Value="[dbo].[fact_chores].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[fact_chores]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Fact_Chore_ID" />
+  </Operation>
+</Operations>

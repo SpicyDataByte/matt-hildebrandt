@@ -1,0 +1,48 @@
+﻿@page "/createchore"
+@inject IChoreData sql
+@rendermode InteractiveServer
+
+<h3 class="mb-3">Create Chore</h3>
+
+<EditForm Model="chore" method="post" FormName="createChoreForm" OnValidSubmit="HandleCreateChore">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Kid Name:</label>
+        <InputText @bind-Value="chore.KidName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Task:</label>
+        <InputText @bind-Value="chore.Task" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Is Complete:</label>
+        <InputCheckbox @bind-Value="chore.IsComplete" />
+    </div>
+    <div class="mb-3">
+        <label>Chore Date:</label>
+        <InputDate @bind-Value="chore.ChoreDate" class="form-control" />
+    </div>
+    <button class="btn btn-outline-primary" type="submit">Create Chore</button>
+</EditForm>
+
+@code {
+    private ChoreModel chore = new()
+        {
+             ChoreDate = DateTime.Today // Set default to today's date
+        };
+
+    private async Task HandleCreateChore()
+    {
+        await sql.InsertChore(chore);
+
+        // Reset form state after saving (if desired)
+        chore = new ChoreModel
+            {
+                ChoreDate = DateTime.Today // Reset to today's date
+            };
+    }
+}

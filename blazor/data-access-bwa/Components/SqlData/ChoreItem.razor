@@ -1,0 +1,93 @@
+﻿@page "/all-chores"
+@inject IChoreData ChoreData
+@rendermode InteractiveServer
+
+@code {
+    private IEnumerable<ChoreModel> chores;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            chores = await ChoreData.GetAllChores();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading chores: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ToggleCompletion(ChoreModel chore)
+    {
+        Console.WriteLine($"Toggling completion for chore: {chore.Task}");
+
+        chore.IsComplete = !chore.IsComplete;
+
+        try
+        {
+            // Update the chore in the database
+            await ChoreData.UpdateChore(chore);
+
+            // Reload data to confirm the update
+            chores = await ChoreData.GetAllChores();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error updating chore: {ex.Message}");
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private string GetBackgroundColor(bool isComplete)
+    {
+        return isComplete ? "green" : "red";
+    }
+
+    // Group chores by KidName
+    private IEnumerable<IGrouping<string, ChoreModel>> GetGroupedChores()
+    {
+        return chores?.GroupBy(c => c.KidName) ?? Enumerable.Empty<IGrouping<string, ChoreModel>>();
+    }
+}
+
+@if (chores != null)
+{
+    <p>Chores Loaded: @chores.Count()</p>
+}
+
+@if (isLoading)
+{
+    <p>Loading chores...</p>
+}
+else if (chores == null || !chores.Any())
+{
+    <p>No chores found.</p>
+}
+else
+{
+    <div style="display: flex; gap: 20px;">
+        @foreach (var group in GetGroupedChores())
+        {
+            <div style="flex: 1;">
+                <h2>@group.Key</h2> 
+                @foreach (var chore in group)
+                {
+                    <div @onclick="() => ToggleCompletion(chore)"
+                         style="background-color: @GetBackgroundColor(chore.IsComplete); padding: 10px; margin: 5px; cursor: pointer;">
+                        <h3>@chore.Task</h3>
+                        <p>Date: @chore.ChoreDate.ToShortDateString()</p>
+                        <p>Status: @(chore.IsComplete ? "Complete" : "Incomplete")</p>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

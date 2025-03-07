@@ -1,0 +1,149 @@
+﻿@page "/DisplayChores"
+@inject IChoreData ChoreData
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@code {
+    private IEnumerable<ChoreModel> chores;
+    private IEnumerable<ChoreModel> filteredChores;
+    private bool isLoading = true;
+    private DateTime selectedDate = DateTime.Today;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            chores = await ChoreData.READ_chores();
+            FilterChores();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading chores: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ToggleCompletion(ChoreModel chore)
+    {
+        Console.WriteLine($"Toggling completion for chore: {chore.Task}");
+        chore.IsComplete = !chore.IsComplete;
+
+        try
+        {
+            await ChoreData.UPDATE_Chores(chore);
+            chores = await ChoreData.READ_chores();
+            FilterChores();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error updating chore: {ex.Message}");
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void FilterChores()
+    {
+        filteredChores = chores?.Where(c => c.ChoreDate.Date == selectedDate.Date) ?? Enumerable.Empty<ChoreModel>();
+    }
+
+
+    private string GetBackgroundColor(bool isComplete)
+    {
+        return isComplete ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.65)"; // 30% opacity
+    }
+
+
+    private IEnumerable<IGrouping<string, ChoreModel>> GetGroupedChores() =>
+        filteredChores?.GroupBy(c => c.KidName) ?? Enumerable.Empty<IGrouping<string, ChoreModel>>();
+
+    private async Task InsertChoreData()
+    {
+        await ChoreData.InsertChoreData(selectedDate);
+        chores = await ChoreData.READ_chores(); 
+        FilterChores(); 
+        StateHasChanged(); 
+    }
+    private async Task DeleteChoreData()
+    {
+        await ChoreData.DeleteChoreData(selectedDate);
+        chores = await ChoreData.READ_chores(); 
+        FilterChores(); 
+        StateHasChanged();
+    }
+}
+<div class="container">
+    <div class="row text-center gx-1 gy-1 align-items-center">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-1 col-xxl-5 fs-3"
+             style="text-align:center;">
+            All Chores
+        </div>
+        <div class="col-xxl-5">
+            Select Date: <input type="date" @bind="selectedDate" @bind:event="onchange" />
+        </div>
+        @if (filteredChores == null || !filteredChores.Any())
+        {
+            <button class="btn btn-outline-primary col-xxl-2" @onclick="InsertChoreData" type="submit">Generate Chores</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-primary col-xxl-2" @onclick="DeleteChoreData" type="submit">Delete Chores</button>
+        }
+
+    </div>
+</div>
+
+@if (isLoading)
+{
+    <p>Loading chores...</p>
+}
+else if (filteredChores == null || !filteredChores.Any())
+{
+    <p>No chores found for selected date.</p>
+}
+else
+{
+    <div style="display: flex; gap: 20px; 
+                            flex-wrap: wrap; 
+                            /* border: 2px solid rgba(50, 150, 50, 0.5); */
+                             border-radius: 10px;  
+                            padding: 10px;
+                            margin: 10px 0;
+     ">
+        @foreach (var group in GetGroupedChores())
+        {
+            <div style="flex: 1; min-width: 250px;">
+                <h2 style="text-align:center">@group.Key</h2>
+
+                <!-- Task Container -->
+                <div style="border: 2px solid rgba(50, 150, 50, 0.5);
+                            background-color: rgba(200, 200, 255, 0.2);
+                            padding: 15px;
+                            border-radius: 10px;">
+
+                    @foreach (var chore in group)
+                    {
+                        <div @onclick="() => ToggleCompletion(chore)"
+                             style="background-color: @GetBackgroundColor(chore.IsComplete);
+                                    padding: 10px;
+                                    margin: 5px 0;
+                                    cursor: pointer;
+                                    border-radius: 10px; /* Rounded corners */
+                                    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                            <h3>@chore.Task</h3>
+                            <p>Date: @chore.ChoreDate.ToShortDateString()</p>
+                            <p>@(chore.IsComplete ? "✅ Complete" : "❌ Incomplete")</p>
+                        </div>
+                    }
+
+                </div> 
+
+            </div>
+        }
+    </div>
+}

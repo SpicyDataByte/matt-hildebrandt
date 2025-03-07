@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\mthil\\local\\blazor\\DataAccess\\data-access-bwa\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\data-access-bwa.bundle.scp.css",
+      "PackagePath": "staticwebassets\\data-access-bwa.58anip1te0.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\mthil\\local\\blazor\\DataAccess\\data-access-bwa\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\mthil\\local\\blazor\\DataAccess\\data-access-bwa\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\mthil\\local\\blazor\\DataAccess\\data-access-bwa\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\mthil\\local\\blazor\\DataAccess\\data-access-bwa\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.data-access-bwa.props",
+      "PackagePath": "build\\data-access-bwa.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.data-access-bwa.props",
+      "PackagePath": "buildMultiTargeting\\data-access-bwa.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.data-access-bwa.props",
+      "PackagePath": "buildTransitive\\data-access-bwa.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.data-access-bwa.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.data-access-bwa.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

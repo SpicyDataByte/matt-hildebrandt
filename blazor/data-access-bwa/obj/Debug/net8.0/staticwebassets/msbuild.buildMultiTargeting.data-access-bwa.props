@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\data-access-bwa.props" />
+</Project>
