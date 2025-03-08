@@ -1,3 +1,5 @@
+-- This calculates user activity flags (daily, weekly, monthly) by encoding activity dates as a 32-bit integer using bitwise operations.
+-- Bitwise encoding reduces storage from 124 bytes to 4 bytes per user per month by representing activity as a 32-bit integer, saving over 95% the storage space.
 with users as (
     select * from user_devices_cumulated
     where date = date('2023-01-31')
