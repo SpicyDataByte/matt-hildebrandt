@@ -19,6 +19,5 @@ I'm **Matt Hildebrandt**, a **Data Engineering** expert dedicated to designing a
 - 🔄 **Version Control & CI/CD** – Git | Docker | Kubernetes  
 
 ## 📫 Let's Connect!  
-- 🌍 [Portfolio](https://matthildebrandt.com/)  
-- 💼 [LinkedIn](https://www.linkedin.com/in/matt-hildebrandt-data-engineer/)
+- 🌍 [Portfolio](https://www.hildebrandt.club/)  
 - ✉️ [Email](mailto:matt.hildebrandt@usask.ca)  
